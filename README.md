@@ -12,7 +12,7 @@ Also to stop inflating `yarn` downloads, since i don't use it at all. I don't kn
 First step is to build node.js image:
 
 ```sh
-docker build -t nodeapp ahwayakchih/nodeapp
+docker build -t nodeapp --build-arg NODE_UID=$(id -u) --build-arg NODE_GID=$(id -g) ahwayakchih/nodeapp
 ```
 
 It will take a while to finish, because it needs to build node.js from sources.

@@ -1,5 +1,10 @@
 FROM alpine:latest
 
+ARG NODE_UID
+ARG NODE_GID
+
+ENV NODE_UID ${NODE_UID:-1000}
+ENV NODE_GID ${NODE_GID:-1000}
 ENV NODE_VERSION ${NODE_VERSION:-11.10.0}
 
 COPY ./alpine-setup-node.sh /tmp/setup.sh

@@ -10,10 +10,10 @@ if [ "$NODE_VERSION" = "" ] ; then
 	NODE_VERSION="11.10.0"
 fi
 
-echo "Making sure node user and group exists"
+echo "Making sure node user and group exists ($NODE_UID:$NODE_GID)"
 
-id -g node >/dev/null 2>&1 || addgroup -g 1000 node
-id -u node >/dev/null 2>&1 || adduser -u 1000 -G node -s /bin/sh -D node
+id -g node >/dev/null 2>&1 || addgroup -g ${NODE_GID:-1000} node
+id -u node >/dev/null 2>&1 || adduser -u ${NODE_UID:-1000} -G node -s /bin/sh -D node
 
 CURRENT_NODE_VERSION=$(node --version 2>/dev/null)
 if [ "v$NODE_VERSION" = "$CURRENT_NODE_VERSION" ] && [ -z "$FORCE_BUILD" ] ; then
