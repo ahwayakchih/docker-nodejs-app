@@ -61,7 +61,7 @@ Simple, one-time test run can be done with:
 docker run --rm -v $(pwd):/app -it ahwayakchih/nodeapp /bin/sh -c "npm install && npm test"
 ```
 
-While developing, it probably more useful to keep `node_modules` cached so each test run after the first one is much faster.
+While developing, it probably is more useful to keep `node_modules` cached so each test run after the first one is much faster.
 To do that, either keep its container ("session" mentioned above) between runs, or use:
 
 ```sh
@@ -71,10 +71,10 @@ docker run --rm -v $(pwd):/app -v $(pwd)/node_modules:/app/node_modules -it ahwa
 That will install modules into local `node_modules` directory. Each next run will simply check if modules are installed and continue.
 After work is done, or just to "clear cached modules", simply remove local `node_modules` directory.
 
-### App/module benchmarking
+### App/module running
 
-If application (or module) provides some kind of `benchmarks` script, it is easy to use it.
-Same as with [Testing](#Testing), only instead of `npm test` use `npm run benchmarks`:
+If application (or module) provides additional "commands" in the form of `scripts` included in `package.json`, you can easly run them too.
+Same as with [Testing](#Testing), only instead of `npm test` use `npm run COMMAND`. For example, if there is a `benchmarks` command:
 
 ```sh
 docker run --rm -v $(pwd):/app -v $(pwd)/node_modules:/app/node_modules -it ahwayakchih/nodeapp /bin/sh -c "npm install && npm run benchmarks"
@@ -85,8 +85,9 @@ docker run --rm -v $(pwd):/app -v $(pwd)/node_modules:/app/node_modules -it ahwa
 To not have to remember long command lines and simplify everything, add following aliases to your `~/.profile` (or counterpart on your system of choice):
 
 ```sh
-alias nodeapp-sh='mkdir -p ./node_modules && docker run --rm -v $(pwd):/app -v $(pwd)/node_modules:/app/node_modules -it ahwayakchih/nodeapp /bin/sh'
-alias nodeapp-run='mkdir -p ./node_modules && docker run --rm -v $(pwd):/app -v $(pwd)/node_modules:/app/node_modules -it ahwayakchih/nodeapp npm run'
-alias nodeapp-test='mkdir -p ./node_modules && docker run --rm -v $(pwd):/app -v $(pwd)/node_modules:/app/node_modules -it ahwayakchih/nodeapp /bin/sh -c "npm install && npm test"'
-alias nodeapp-benchmark='mkdir -p ./node_modules && docker run --rm -v $(pwd):/app -v $(pwd)/node_modules:/app/node_modules -it ahwayakchih/nodeapp /bin/sh -c "npm install && npm run benchmarks"'
+alias nodeapp='mkdir -p ./node_modules && docker run --rm -v $(pwd):/app -v $(pwd)/node_modules:/app/node_modules -it ahwayakchih/nodeapp'
+alias nodeapp-sh='nodeapp /bin/sh'
+alias nodeapp-run='nodeapp npm run'
+alias nodeapp-test='nodeapp /bin/sh -c "npm install && npm test"'
+alias nodeapp-benchmark='nodeapp /bin/sh -c "npm install && npm run benchmarks"'
 ```
