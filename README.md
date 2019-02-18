@@ -9,10 +9,11 @@ Also to stop inflating `yarn` downloads, since i don't use it at all. I don't kn
 
 ## Preparation
 
-First step is to build node.js image:
+If you do not want to use pre-built images, like for security reasons, you can build one from Dockerfile.
+Got to `docker-nodejs-app` directory and run:
 
 ```sh
-docker build -t nodeapp --build-arg NODE_UID=$(id -u) --build-arg NODE_GID=$(id -g) ahwayakchih/nodeapp
+docker build -t ahwayakchih/nodeapp --build-arg NODE_UID=$(id -u) --build-arg NODE_GID=$(id -g) .
 ```
 
 It will take a while to finish, because it needs to build node.js from sources.
@@ -23,7 +24,7 @@ After that, all commands will reuse this pre-build image, and you can find it an
 Next try single-run "session". Go to your node.js application directory and run:
 
 ```sh
-docker run --rm -v $(pwd):/app -it nodeapp
+docker run --rm -v $(pwd):/app -it ahwayakchih/nodeapp
 ```
 
 It will remove the container as soon as you finish (exit the shell).
@@ -31,13 +32,13 @@ It will remove the container as soon as you finish (exit the shell).
 To keep a "session" for multiple runs, use following command:
 
 ```sh
-docker run --name my-node-app -v $(pwd):/app -it nodeapp
+docker run --name my-node-app -v $(pwd):/app -it ahwayakchih/nodeapp
 ```
 
 And then, to continue last "session" (and keep docker running):
 
 ```sh
-docker start my-node-app && docker exec -it nodeapp /bin/sh
+docker start my-node-app && docker exec -it ahwayakchih/nodeapp /bin/sh
 ```
 
 Or, to stop container after exiting:
@@ -57,14 +58,14 @@ docker stop my-node-app && docker rm my-node-app --volumes
 Simple, one-time test run can be done with:
 
 ```sh
-docker run --rm -v $(pwd):/app -it nodeapp /bin/sh -c "npm install && npm test"
+docker run --rm -v $(pwd):/app -it ahwayakchih/nodeapp /bin/sh -c "npm install && npm test"
 ```
 
 While developing, it probably more useful to keep `node_modules` cached so each test run after the first one is much faster.
 To do that, either keep its container ("session" mentioned above) between runs, or use:
 
 ```sh
-docker run --rm -v $(pwd):/app -v $(pwd)/node_modules:/app/node_modules -it nodeapp /bin/sh -c "npm install && npm test"
+docker run --rm -v $(pwd):/app -v $(pwd)/node_modules:/app/node_modules -it ahwayakchih/nodeapp /bin/sh -c "npm install && npm test"
 ```
 
 That will install modules into local `node_modules` directory. Each next run will simply check if modules are installed and continue.
@@ -76,7 +77,7 @@ If application (or module) provides some kind of `benchmarks` script, it is easy
 Same as with [Testing](#Testing), only instead of `npm test` use `npm run benchmarks`:
 
 ```sh
-docker run --rm -v $(pwd):/app -v $(pwd)/node_modules:/app/node_modules -it nodeapp /bin/sh -c "npm install && npm run benchmarks"
+docker run --rm -v $(pwd):/app -v $(pwd)/node_modules:/app/node_modules -it ahwayakchih/nodeapp /bin/sh -c "npm install && npm run benchmarks"
 ```
 
 ## Simplify
@@ -84,6 +85,6 @@ docker run --rm -v $(pwd):/app -v $(pwd)/node_modules:/app/node_modules -it node
 To not have to remember long command lines and simplify everything, add following aliases to your `~/.profile` (or counterpart on your system of choice):
 
 ```sh
-alias nodeapp-test='docker run --rm -v $(pwd):/app -v $(pwd)/node_modules:/app/node_modules -it nodeapp /bin/sh -c "npm install && npm test"'
-alias nodeapp-benchmark='docker run --rm -v $(pwd):/app -v $(pwd)/node_modules:/app/node_modules -it nodeapp /bin/sh -c "npm install && npm run benchmarks"'
+alias nodeapp-test='mkdir -p ./node_modules && docker run --rm -v $(pwd):/app -v $(pwd)/node_modules:/app/node_modules -it ahwayakchih/nodeapp /bin/sh -c "npm install && npm test"'
+alias nodeapp-benchmark='mkdir -p ./node_modules && docker run --rm -v $(pwd):/app -v $(pwd)/node_modules:/app/node_modules -it ahwayakchih/nodeapp /bin/sh -c "npm install && npm run benchmarks"'
 ```
