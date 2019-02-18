@@ -9,8 +9,8 @@ Also to stop inflating `yarn` downloads, since i don't use it at all. I don't kn
 
 ## Preparation
 
-If you do not want to use pre-built images, like for security reasons, you can build one from Dockerfile.
-Got to `docker-nodejs-app` directory and run:
+If you do not want to use pre-built images (for security reasons? just because?), you can build one from Dockerfile.
+Go to `docker-nodejs-app` directory and run:
 
 ```sh
 docker build -t ahwayakchih/nodeapp --build-arg NODE_UID=$(id -u) --build-arg NODE_GID=$(id -g) .
