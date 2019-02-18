@@ -3,9 +3,9 @@ Node.js app runner
 
 ## Why?
 
-To learn some docker stuff, make it easier to run node.js modules and apps inside docker.
+To learn some docker stuff while making it easier to run node.js modules and apps inside docker.
 
-Also to stop inflating `yarn` downloads, since i don't use it at all. I don't know why it's injected into official node.js docker images while something that probably will be needed (python and g++) for bulding some of the binary modules is not.
+Also to stop inflating `yarn` downloads, since i don't use it at all. I don't know why it's injected into official node.js docker images while something that probably will be needed, e.g., python and g++ for building some of the binary modules, is not.
 
 ## Preparation
 
