@@ -1,4 +1,4 @@
-FROM alpine:latest
+FROM alpine:3.8
 
 ARG NODE_UID
 ARG NODE_GID
@@ -12,16 +12,14 @@ RUN chmod +x /tmp/setup.sh \
 	&& /tmp/setup.sh \
 	&& rm /tmp/setup.sh
 
-RUN mkdir /app \
-    && chmod 755 /app \
-    && chown node:node /app
+RUN mkdir -p /app/node_modules \
+    && chmod -R 755 /app \
+    && chown -R node:node /app
 
-USER node:node
-
-RUN mkdir /app/node_modules
 VOLUME /app/node_modules
 
+WORKDIR /app
+USER node:node
 RUN npm config set package-lock false
 
-WORKDIR /app
 CMD ["/bin/sh"]
