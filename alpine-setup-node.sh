@@ -1,13 +1,13 @@
 #!/usr/bin/env sh
 
 # Based on Dockerfile from https://hub.docker.com/_/node/
-# Ported to shell script by Marcin Konicki <https://ahwayakchih.neoni.net>
+# Ported to shell script by Marcin Konicki (https://ahwayakchih.neoni.net)
 # to make it usable also inside custom VMs
 
 NODE_VERSION=${NODE_VERSION:-"$1"}
 
 if [ "$NODE_VERSION" = "" ] ; then
-	NODE_VERSION="11.10.0"
+	NODE_VERSION="11.10.1"
 fi
 
 echo "Making sure node user and group exists ($NODE_UID:$NODE_GID)"
