@@ -8,6 +8,9 @@ ENV NODE_UID ${NODE_UID:-1000}
 ENV NODE_GID ${NODE_GID:-1000}
 ENV NODE_VERSION ${NODE_VERSION:-11.10.1}
 
+RUN apk update \
+	&& apk upgrade --available
+
 COPY ./alpine-setup-node.sh /tmp/setup.sh
 RUN chmod +x /tmp/setup.sh \
 	&& /tmp/setup.sh \
