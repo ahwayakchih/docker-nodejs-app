@@ -13,7 +13,7 @@ If you do not want to use pre-built images (for security reasons? just because?)
 Go to `docker-nodejs-app` directory and run:
 
 ```sh
-docker build -t ahwayakchih/nodeapp --build-arg NODE_UID=$(id -u) --build-arg NODE_GID=$(id -g) --build-arg NODE_VERSION=11.10.1 .
+docker build -t ahwayakchih/nodeapp --build-arg NODE_UID=$(id -u) --build-arg NODE_GID=$(id -g) --build-arg NODE_VERSION=11.11.0 .
 ```
 
 It will take a while to finish, because it needs to build node.js from sources.
