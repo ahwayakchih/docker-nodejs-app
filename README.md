@@ -13,7 +13,20 @@ If you do not want to use pre-built images (for security reasons? just because?)
 Go to `docker-nodejs-app` directory and run:
 
 ```sh
-docker build -t ahwayakchih/nodeapp --build-arg NODE_UID=$(id -u) --build-arg NODE_GID=$(id -g) --build-arg NODE_VERSION=11.13.0 .
+make
+```
+
+It will download and use latest stable Alpine Linux and build latest "current" Node.js version.
+You can use specific version of Node.js by passing it through environmental veriable. For example:
+
+```sh
+NODE_VERSION=11.13.0 make
+```
+
+To use different Alpine Linux version, you can specify two variables:
+
+```sh
+ALPINE_URL=https://cz.alpinelinux.org/alpine/v3.9/releases/x86_64/ ALPINE_VERSION=3.9.3 make
 ```
 
 It will take a while to finish, because it needs to build node.js from sources.
