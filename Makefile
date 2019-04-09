@@ -18,7 +18,7 @@ all:
 
 	@echo 'Using Node.js v'${NODE_VERSION}
 	@echo 'Building ahwayakchih/nodeapp...'
-	@docker build -t ahwayakchih/nodeapp --build-arg ALPINE=${ALPINE_PKG} --build-arg NODE_UID=$(id -u) --build-arg NODE_GID=$(id -g) --build-arg NODE_VERSION=11.13.0 .
+	@docker build -t ahwayakchih/nodeapp --build-arg ALPINE=${ALPINE_PKG} --build-arg NODE_UID=$(id -u) --build-arg NODE_GID=$(id -g) --build-arg NODE_VERSION=${NODE_VERSION} .
 
 	@echo 'Cleaning up'
 	@rm ${ALPINE_PKG}
