@@ -1,4 +1,4 @@
-FROM alpine:3.9.2
+FROM alpine:3.9.3
 
 ARG NODE_UID
 ARG NODE_GID
