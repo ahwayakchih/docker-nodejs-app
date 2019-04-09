@@ -1,4 +1,4 @@
-ALPINE_URL?=https://cz.alpinelinux.org/alpine/latest-stable/releases/x86_64
+ALPINE_URL?=http://dl-cdn.alpinelinux.org/alpine/v3.9/releases/x86_64
 NODE_URL?=https://nodejs.org/dist/latest
 
 ALPINE_VERSION?=$(shell curl -s ${ALPINE_URL}/ | grep 'alpine-minirootfs' | tail -n 1 | sed -e 's/<[^>]*>//g' | cut -d " " -s -f 1 | cut -d "-" -f 3)
