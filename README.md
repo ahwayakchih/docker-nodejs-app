@@ -87,7 +87,7 @@ After work is done, or just to "clear cached modules", simply remove local `node
 ### App/module running
 
 If application (or module) provides additional "commands" in the form of `scripts` included in `package.json`, you can easly run them too.
-Same as with [Testing](#Testing), only instead of `npm test` use `npm run COMMAND`. For example, if there is a `benchmarks` command:
+It's similar to [Testing](#appmodule-testing), only instead of `npm test` use `npm run COMMAND`. For example, if there is a `benchmarks` command:
 
 ```sh
 docker run --rm -v $(pwd):/app -v $(pwd)/node_modules:/app/node_modules -it ahwayakchih/nodeapp /bin/sh -c "npm install && npm run benchmarks"
