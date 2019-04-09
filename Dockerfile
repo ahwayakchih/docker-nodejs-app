@@ -1,4 +1,6 @@
-FROM alpine:3.9.3
+FROM scratch
+
+ARG ALPINE
 
 ARG NODE_UID
 ARG NODE_GID
@@ -7,6 +9,8 @@ ARG NODE_VERSION
 ENV NODE_UID ${NODE_UID:-1000}
 ENV NODE_GID ${NODE_GID:-1000}
 ENV NODE_VERSION ${NODE_VERSION:-11.13.0}
+
+ADD ${ALPINE} /
 
 RUN apk update \
 	&& apk upgrade --available
