@@ -61,10 +61,10 @@ for key in \
 	A48C2BEE680E841632CD4E44F07496B3EB3C1762 \
 ; do
 	gpg -k "$key" || \
-		gpg --keyserver pool.sks-keyservers.net --recv-keys "$key" || \
-		gpg --keyserver hkp://pgp.mit.edu:80 --recv-keys "$key" || \
-		gpg --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys "$key" || \
-		gpg --keyserver hkp://ipv4.pool.sks-keyservers.net --recv-keys "$key"
+		timeout -t 10 gpg --keyserver hkp://pgp.mit.edu:80 --recv-keys "$key" || \
+		timeout -t 10 gpg --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys "$key" || \
+		timeout -t 10 gpg --keyserver pool.sks-keyservers.net --recv-keys "$key" || \
+		timeout -t 10 gpg --keyserver hkp://ipv4.pool.sks-keyservers.net --recv-keys "$key"
 done
 
 # Get sources if needed
