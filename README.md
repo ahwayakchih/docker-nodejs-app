@@ -95,12 +95,12 @@ docker run --rm -v $(pwd):/app -v $(pwd)/node_modules:/app/node_modules -it ahwa
 
 ## Simplify
 
-To not have to remember long command lines and simplify everything, add following aliases to your `~/.profile` (or counterpart on your system of choice):
+Instead of having to remember long command lines, you can simplify everything by adding following aliases to your `~/.profile` (or counterpart on your system of choice):
 
 ```sh
-alias nodeapp='mkdir -p ./node_modules && docker run --rm -v $(pwd):/app -v $(pwd)/node_modules:/app/node_modules -it ahwayakchih/nodeapp'
-alias nodeapp-sh='nodeapp /bin/sh'
-alias nodeapp-run='nodeapp npm run'
-alias nodeapp-test='nodeapp /bin/sh -c "npm install && npm test"'
-alias nodeapp-benchmark='nodeapp /bin/sh -c "npm install && npm run benchmarks"'
+alias _nodeapp='mkdir -p ./node_modules && docker run --rm -v $(pwd):/app -v $(pwd)/node_modules:/app/node_modules -it ahwayakchih/nodeapp'
+alias nodeapp-sh='_nodeapp /bin/sh'
+alias nodeapp-run='_nodeapp npm run'
+alias nodeapp-test='_nodeapp /bin/sh -c "npm install && npm test"'
+alias nodeapp-benchmark='_nodeapp /bin/sh -c "npm install && npm run benchmarks"'
 ```
