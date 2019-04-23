@@ -7,21 +7,37 @@ NODE_VERSION?=$(shell curl -s ${NODE_URL}/ | grep 'node-' | tail -n 1 | sed -e '
 ALPINE_PKG=alpine-minirootfs-${ALPINE_VERSION}-x86_64.tar.gz
 ALPINE_SUM=${ALPINE_PKG}.sha512
 
+ALPINE_MAJOR=$(shell echo ${ALPINE_VERSION} | cut -d "." -s -f 1)
+ALPINE_MINOR=$(shell echo ${ALPINE_VERSION} | cut -d "." -s -f 2)
+NODE_MAJOR=$(shell echo ${NODE_VERSION} | cut -d "." -s -f 1)
+NODE_MINOR=$(shell echo ${NODE_VERSION} | cut -d "." -s -f 2)
+NODEAPP_VERSION?=${ALPINE_MAJOR}$(shell printf %02d ${ALPINE_MINOR}).${NODE_MAJOR}$(shell printf %02d ${NODE_MINOR})
+
 all:
 	@echo 'Using Alpine Linux v'${ALPINE_VERSION}
-	@echo 'Downloading '${ALPINE_PKG}
-	@curl -s ${ALPINE_URL}/${ALPINE_PKG} -o ${ALPINE_PKG}
+	@if [ ! -f ${ALPINE_PKG} ]; then\
+		echo 'Downloading '${ALPINE_PKG};\
+		curl -s ${ALPINE_URL}/${ALPINE_PKG} -o ${ALPINE_PKG};\
+	fi
 	@echo 'Downloading '${ALPINE_SUM}
 	@curl -s ${ALPINE_URL}/${ALPINE_SUM} -o ${ALPINE_SUM}
 	@echo 'Validating '${ALPINE_PKG}
 	@sha512sum -c ${ALPINE_SUM}
 
 	@echo 'Using Node.js v'${NODE_VERSION}
-	@echo 'Building ahwayakchih/nodeapp...'
-	@docker build -t ahwayakchih/nodeapp --build-arg ALPINE=${ALPINE_PKG} --build-arg NODE_UID=$(id -u) --build-arg NODE_GID=$(id -g) --build-arg NODE_VERSION=${NODE_VERSION} .
+	@echo 'Building ahwayakchih/nodeapp:'${NODEAPP_VERSION}'...'
+	@docker build -t ahwayakchih/nodeapp:build --build-arg ALPINE=${ALPINE_PKG} --build-arg NODE_UID=$(id -u) --build-arg NODE_GID=$(id -g) --build-arg NODE_VERSION=${NODE_VERSION} .
+	@echo  'Tagging ahwayakchih/nodeapp:build as '${NODEAPP_VERSION}'...'
+	@docker tag ahwayakchih/nodeapp:build ahwayakchih/nodeapp:${NODEAPP_VERSION}
+	@echo  'Tagging ahwayakchih/nodeapp:build as latest...'
+	@docker tag ahwayakchih/nodeapp:build ahwayakchih/nodeapp:latest
+	@echo  'Removing build tag...'
+	@docker rmi ahwayakchih/nodeapp:build
 
-	@echo 'Cleaning up'
-	@rm ${ALPINE_PKG}
-	@rm ${ALPINE_SUM}
+	@if [ -f ${ALPINE_PKG} ]; then\
+		echo 'Cleaning up';\
+		rm ${ALPINE_PKG};\
+		rm ${ALPINE_SUM};\
+	fi
 
 .PHONY: all
