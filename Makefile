@@ -1,7 +1,7 @@
-ALPINE_URL?=http://dl-cdn.alpinelinux.org/alpine/v3.9/releases/x86_64
+ALPINE_URL?=http://dl-cdn.alpinelinux.org/alpine/v3.10/releases/x86_64
 NODE_URL?=https://nodejs.org/dist/latest
 
-ALPINE_VERSION?=$(shell curl -s ${ALPINE_URL}/ | grep 'alpine-minirootfs' | tail -n 1 | sed -e 's/<[^>]*>//g' | cut -d " " -s -f 1 | cut -d "-" -f 3)
+ALPINE_VERSION?=$(shell curl -s ${ALPINE_URL}/ | grep 'alpine-minirootfs' | grep -Eiv '_rc[0-9]+' | tail -n 1 | sed -e 's/<[^>]*>//g' | cut -d " " -s -f 1 | cut -d "-" -f 3)
 NODE_VERSION?=$(shell curl -s ${NODE_URL}/ | grep 'node-' | tail -n 1 | sed -e 's/<[^>]*>//g' | cut -d " " -s -f 1 | cut -d "-" -f 2 | cut -d "." -f 1,2,3 | cut -d "v" -f 2)
 
 ALPINE_PKG=alpine-minirootfs-${ALPINE_VERSION}-x86_64.tar.gz
