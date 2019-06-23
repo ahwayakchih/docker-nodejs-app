@@ -13,7 +13,19 @@ NODE_MAJOR=$(shell echo ${NODE_VERSION} | cut -d "." -s -f 1)
 NODE_MINOR=$(shell echo ${NODE_VERSION} | cut -d "." -s -f 2)
 NODEAPP_VERSION?=${ALPINE_MAJOR}$(shell printf %02d ${ALPINE_MINOR}).${NODE_MAJOR}$(shell printf %02d ${NODE_MINOR})
 
-all:
+EXISTS:=$(shell docker inspect ahwayakchih/nodeapp:${NODEAPP_VERSION} 2>/dev/null | jq -e .[0].Created)
+
+ifeq (${EXISTS},null)
+all: build
+else
+all: ignore
+endif
+
+ignore:
+	@echo 'ahwayakchih/nodeapp:'${NODEAPP_VERSION}' was built on ${EXISTS}'
+	@echo 'skipping build'
+
+build:
 	@echo 'Using Alpine Linux v'${ALPINE_VERSION}
 	@if [ ! -f ${ALPINE_PKG} ]; then\
 		echo 'Downloading '${ALPINE_PKG};\
