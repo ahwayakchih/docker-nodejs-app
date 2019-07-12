@@ -24,6 +24,7 @@ endif
 ignore:
 	@echo 'ahwayakchih/nodeapp:'${NODEAPP_VERSION}' was built on ${EXISTS}'
 	@echo 'skipping build'
+	@echo 'to force (re)build, run: "make build" instead'
 
 build:
 	@echo 'Using Alpine Linux v'${ALPINE_VERSION}
