@@ -26,7 +26,7 @@ NODE_VERSION=12.9.1 make
 To use different Alpine Linux version, you can specify two variables:
 
 ```sh
-ALPINE_URL=http://dl-cdn.alpinelinux.org/alpine/v3.10/releases/x86_64 ALPINE_VERSION=3.10.1 make
+ALPINE_URL=http://dl-cdn.alpinelinux.org/alpine/v3.10/releases/x86_64 ALPINE_VERSION=3.10.2 make
 ```
 
 It will take a while to finish, because it needs to build node.js from sources.
