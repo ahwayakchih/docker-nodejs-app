@@ -15,6 +15,7 @@ ADD ${ALPINE} /
 RUN apk update \
 	&& apk upgrade --available
 
+COPY ./patches /tmp/patches
 COPY ./alpine-setup-node.sh /tmp/setup.sh
 RUN chmod +x /tmp/setup.sh \
 	&& /tmp/setup.sh \

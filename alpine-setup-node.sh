@@ -79,9 +79,21 @@ curl -fsSLO --compressed "https://nodejs.org/dist/v$NODE_VERSION/SHASUMS256.txt.
 gpg --batch --decrypt --output SHASUMS256.txt SHASUMS256.txt.asc || cleanexit
 grep " node-v$NODE_VERSION.tar.xz\$" SHASUMS256.txt | sha256sum -c - || cleanexit
 
+# Unpack and prepare
 tar -xf "node-v$NODE_VERSION.tar.xz"
 cd "node-v$NODE_VERSION"
 ./configure
+
+# Patch
+echo "Checking for build patch at patches/v$NODE_VERSION.patch"
+if [ -f "/tmp/patches/v$NODE_VERSION.patch" ] ; then
+	echo "Applying build patch from patches/v$NODE_VERSION.patch"
+	git apply "/tmp/patches/v$NODE_VERSION.patch" || cleanexit
+else
+	echo "No patches found"
+fi
+
+# Build!
 make -j$(getconf _NPROCESSORS_ONLN)
 make install
 cd ..
