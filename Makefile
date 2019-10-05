@@ -53,4 +53,8 @@ build:
 		rm ${ALPINE_SUM};\
 	fi
 
+puppeteer: all
+	@echo 'Building ahwayakchih/nodeapp:puppeteer'
+	@docker build -t ahwayakchih/nodeapp:puppeteer -f Puppeteer.dockerfile .
+
 .PHONY: all
