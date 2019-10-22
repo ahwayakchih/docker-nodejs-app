@@ -13,7 +13,11 @@ NODE_MAJOR=$(shell echo ${NODE_VERSION} | cut -d "." -s -f 1)
 NODE_MINOR=$(shell echo ${NODE_VERSION} | cut -d "." -s -f 2)
 NODEAPP_VERSION?=${ALPINE_MAJOR}$(shell printf %02d ${ALPINE_MINOR}).${NODE_MAJOR}$(shell printf %02d ${NODE_MINOR})
 
-EXISTS:=$(shell docker inspect ahwayakchih/nodeapp:${NODEAPP_VERSION} 2>/dev/null | jq -e .[0].Created)
+NODE_UID?=$(shell id -u)
+NODE_GID?=$(shell id -g)
+
+CONTAINER_ENGINE?=$(shell podman --version >/dev/null 2>&1 && echo -n "podman" || echo -n "docker")
+EXISTS:=$(shell ${CONTAINER_ENGINE} inspect ahwayakchih/nodeapp:${NODEAPP_VERSION} 2>/dev/null | jq -e .[0].Created)
 
 ifeq (${EXISTS},null)
 all: build
@@ -27,6 +31,7 @@ ignore:
 	@echo 'to force (re)build, run: "make build" instead'
 
 build:
+	@echo 'Using "'${CONTAINER_ENGINE}'" container engine'
 	@echo 'Using Alpine Linux v'${ALPINE_VERSION}
 	@if [ ! -f ${ALPINE_PKG} ]; then\
 		echo 'Downloading '${ALPINE_PKG};\
@@ -39,13 +44,13 @@ build:
 
 	@echo 'Using Node.js v'${NODE_VERSION}
 	@echo 'Building ahwayakchih/nodeapp:'${NODEAPP_VERSION}'...'
-	@docker build -t ahwayakchih/nodeapp:build --build-arg ALPINE=${ALPINE_PKG} --build-arg NODE_UID=$(id -u) --build-arg NODE_GID=$(id -g) --build-arg NODE_VERSION=${NODE_VERSION} .
+	@${CONTAINER_ENGINE} build -t ahwayakchih/nodeapp:build --build-arg ALPINE=${ALPINE_PKG} --build-arg NODE_UID=${NODE_UID} --build-arg NODE_GID=${NODE_GID} --build-arg NODE_VERSION=${NODE_VERSION} .
 	@echo  'Tagging ahwayakchih/nodeapp:build as '${NODEAPP_VERSION}'...'
-	@docker tag ahwayakchih/nodeapp:build ahwayakchih/nodeapp:${NODEAPP_VERSION}
+	@${CONTAINER_ENGINE} tag ahwayakchih/nodeapp:build ahwayakchih/nodeapp:${NODEAPP_VERSION}
 	@echo  'Tagging ahwayakchih/nodeapp:build as latest...'
-	@docker tag ahwayakchih/nodeapp:build ahwayakchih/nodeapp:latest
+	@${CONTAINER_ENGINE} tag ahwayakchih/nodeapp:build ahwayakchih/nodeapp:latest
 	@echo  'Removing build tag...'
-	@docker rmi ahwayakchih/nodeapp:build
+	@${CONTAINER_ENGINE} rmi ahwayakchih/nodeapp:build
 
 	@if [ -f ${ALPINE_PKG} ]; then\
 		echo 'Cleaning up';\
@@ -55,6 +60,6 @@ build:
 
 puppeteer: all
 	@echo 'Building ahwayakchih/nodeapp:puppeteer'
-	@docker build -t ahwayakchih/nodeapp:puppeteer -f Puppeteer.dockerfile .
+	@${CONTAINER_ENGINE} build -t ahwayakchih/nodeapp:puppeteer -f Puppeteer.dockerfile .
 
 .PHONY: all

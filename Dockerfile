@@ -10,9 +10,13 @@ ENV NODE_UID ${NODE_UID:-1000}
 ENV NODE_GID ${NODE_GID:-1000}
 ENV NODE_VERSION ${NODE_VERSION:-12.13.0}
 
-ADD ${ALPINE} /
+# Changed temporarily to workaround bug in podman:
+# https://github.com/containers/buildah/issues/1938
+# ADD ${ALPINE} /
+ADD *.tar.gz /
 
-RUN apk update \
+RUN env \
+	&& apk update \
 	&& apk upgrade --available
 
 COPY ./patches /tmp/patches
