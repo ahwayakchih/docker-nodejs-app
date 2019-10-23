@@ -29,8 +29,6 @@ RUN mkdir -p /app/node_modules \
     && chmod -R 755 /app \
     && chown -R node:node /app
 
-VOLUME /app/node_modules
-
 WORKDIR /app
 USER node:node
 RUN npm config set package-lock false
