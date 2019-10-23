@@ -8,7 +8,7 @@ ARG NODE_VERSION
 
 ENV NODE_UID ${NODE_UID:-1000}
 ENV NODE_GID ${NODE_GID:-1000}
-ENV NODE_VERSION ${NODE_VERSION:-12.13.0}
+ENV NODE_VERSION ${NODE_VERSION:-13.0.1}
 
 # Changed temporarily to workaround bug in podman:
 # https://github.com/containers/buildah/issues/1938
