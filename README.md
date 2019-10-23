@@ -30,9 +30,9 @@ ALPINE_URL=http://dl-cdn.alpinelinux.org/alpine/v3.10/releases/x86_64 ALPINE_VER
 ```
 
 It will take a while to finish, because it needs to build node.js from sources.
-After that, all commands will reuse this pre-build image, and you can find it and remove it later with regular `docker` commands.
+After that, all commands will reuse this pre-build image, and you can find it and remove it later with regular `docker` and `podman` commands.
 
-## Usage
+## Usage (docker)
 
 Next try single-run "session". Go to your node.js application directory and run:
 
@@ -66,19 +66,23 @@ To remove session, run following command:
 docker stop my-node-app && docker rm my-node-app --volumes
 ```
 
+### Usage (podman)
+
+Since `podman` supports `docker`'s commands, most of the examples above should work.
+To keep current user's and group's id when running `podman`, use additional `--userns=keep-id` parameter:
+
+```sh
+podman run --rm -v $(pwd):/app --userns=keep-id -it ahwayakchih/nodeapp
+```
+
+That will make sure that, for example, `node_modules` directory created by `npm install` command will be owned by the user who started `podman` container.
+
 ### App/module testing
 
 Simple, one-time test run can be done with:
 
 ```sh
-docker run --rm -v $(pwd):/app -it ahwayakchih/nodeapp /bin/sh -c "npm install && npm test"
-```
-
-While developing, it probably is more useful to keep `node_modules` cached so each test run after the first one is much faster.
-To do that, either keep its container ("session" mentioned above) between runs, or use:
-
-```sh
-docker run --rm -v $(pwd):/app -v $(pwd)/node_modules:/app/node_modules -it ahwayakchih/nodeapp /bin/sh -c "npm install && npm test"
+docker run --rm -v $(pwd):/app -it ahwayakchih/nodeapp /bin/sh -l -c "npm install && npm test"
 ```
 
 That will install modules into local `node_modules` directory. Each next run will simply check if modules are installed and continue.
@@ -90,7 +94,7 @@ If application (or module) provides additional "commands" in the form of `script
 It's similar to [Testing](#appmodule-testing), only instead of `npm test` use `npm run COMMAND`. For example, if there is a `benchmarks` command:
 
 ```sh
-docker run --rm -v $(pwd):/app -v $(pwd)/node_modules:/app/node_modules -it ahwayakchih/nodeapp /bin/sh -c "npm install && npm run benchmarks"
+docker run --rm -v $(pwd):/app -it ahwayakchih/nodeapp /bin/sh -l -c "npm install && npm run benchmarks"
 ```
 
 ## Simplify
@@ -98,9 +102,9 @@ docker run --rm -v $(pwd):/app -v $(pwd)/node_modules:/app/node_modules -it ahwa
 Instead of having to remember long command lines, you can simplify everything by adding following aliases to your `~/.profile` (or counterpart on your system of choice):
 
 ```sh
-alias _nodeapp='mkdir -p ./node_modules && docker run --rm -v $(pwd):/app -v $(pwd)/node_modules:/app/node_modules -it ahwayakchih/nodeapp'
-alias nodeapp-sh='_nodeapp /bin/sh'
+alias _nodeapp='mkdir -p ./node_modules && docker run --rm -v $(pwd):/app -it ahwayakchih/nodeapp'
+alias nodeapp-sh='_nodeapp /bin/sh -l'
 alias nodeapp-run='_nodeapp npm run'
-alias nodeapp-test='_nodeapp /bin/sh -c "npm install && npm test"'
-alias nodeapp-benchmark='_nodeapp /bin/sh -c "npm install && npm run benchmarks"'
+alias nodeapp-test='_nodeapp /bin/sh -l -c "npm install && npm test"'
+alias nodeapp-benchmark='_nodeapp /bin/sh -l -c "npm install && npm run benchmarks"'
 ```
