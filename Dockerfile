@@ -31,6 +31,11 @@ RUN mkdir -p /app/node_modules \
 
 WORKDIR /app
 USER node:node
+
 RUN npm config set package-lock false
 
-CMD ["/bin/sh"]
+RUN mkdir ~/.npm-global\
+	&& npm config set prefix '~/.npm-global'\
+	&& echo "export PATH=~/.npm-global/bin:\$PATH" > ~/.profile
+
+CMD ["/bin/sh", "-l"]
