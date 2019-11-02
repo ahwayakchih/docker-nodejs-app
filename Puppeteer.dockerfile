@@ -9,8 +9,8 @@ RUN apk add udev xorg-server wait4ports ttf-freefont dbus dumb-init xvfb xvfb-ru
 
 ENV CHROME_BIN /usr/bin/chromium-browser
 
-USER node
+USER node:node
 
 ENTRYPOINT ["/usr/bin/dumb-init"]
 
-CMD xvfb-run /bin/sh
+CMD xvfb-run /bin/sh -l

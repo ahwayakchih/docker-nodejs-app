@@ -51,7 +51,7 @@ docker run --name my-node-app -v $(pwd):/app -it ahwayakchih/nodeapp
 And then, to continue last "session" (and keep docker running):
 
 ```sh
-docker start my-node-app && docker exec -it ahwayakchih/nodeapp /bin/sh
+docker start my-node-app && docker exec -it ahwayakchih/nodeapp /bin/sh -l
 ```
 
 Or, to stop container after exiting:
