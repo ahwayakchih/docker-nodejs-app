@@ -62,4 +62,8 @@ puppeteer: all
 	@echo 'Building ahwayakchih/nodeapp:puppeteer'
 	@${CONTAINER_ENGINE} build -t ahwayakchih/nodeapp:puppeteer -f Puppeteer.dockerfile .
 
+phantomjs: all
+	@echo 'Building ahwayakchih/nodeapp:phantomjs'
+	@${CONTAINER_ENGINE} build -t ahwayakchih/nodeapp:phantomjs -f PhantomJS.dockerfile .
+
 .PHONY: all
