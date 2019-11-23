@@ -16,22 +16,34 @@ NODEAPP_VERSION?=${ALPINE_MAJOR}$(shell printf %02d ${ALPINE_MINOR}).${NODE_MAJO
 NODE_UID?=$(shell id -u)
 NODE_GID?=$(shell id -g)
 
-CONTAINER_ENGINE?=$(shell podman --version >/dev/null 2>&1 && echo -n "podman" || echo -n "docker")
-EXISTS:=$(shell ${CONTAINER_ENGINE} inspect ahwayakchih/nodeapp:${NODEAPP_VERSION} 2>/dev/null | jq -e .[0].Created)
+HAS_PODMAN=$(shell podman --version >/dev/null 2>&1 && echo -n "podman" || false)
+HAS_DOCKER=$(shell docker --version >/dev/null 2>&1 && docker ps >/dev/null 2>&1 && echo -n "docker" || false)
+ifeq (${HAS_PODMAN}${HAS_DOCKER},podmandocker)
+	# Since dockerd seems to be running, we can assume that's what user wants at the moment
+	CONTAINER_ENGINE?=docker
+else ifeq (${HAS_PODMAN},podman)
+	CONTAINER_ENGINE?=podman
+else
+	CONTAINER_ENGINE?=docker
+endif
 
-ifeq (${EXISTS},null)
+EXISTS:=$(shell ${CONTAINER_ENGINE} inspect ahwayakchih/nodeapp:${NODEAPP_VERSION} 2>/dev/null | jq -e '.[0].Created | select(. == null | not)')
+
+ifeq (${EXISTS},)
 all: build
 else
 all: ignore
 endif
 
-ignore:
+info:
+	@echo 'Using "'${CONTAINER_ENGINE}'" container engine, set CONTAINER_ENGINE=your_engine_of_choice to override that'
+
+ignore: info
 	@echo 'ahwayakchih/nodeapp:'${NODEAPP_VERSION}' was built on ${EXISTS}'
 	@echo 'skipping build'
 	@echo 'to force (re)build, run: "make build" instead'
 
-build:
-	@echo 'Using "'${CONTAINER_ENGINE}'" container engine'
+build: info
 	@echo 'Using Alpine Linux v'${ALPINE_VERSION}
 	@if [ ! -f ${ALPINE_PKG} ]; then\
 		echo 'Downloading '${ALPINE_PKG};\
