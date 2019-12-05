@@ -77,6 +77,12 @@ podman run --rm -v $(pwd):/app --userns=keep-id -it ahwayakchih/nodeapp
 
 That will make sure that, for example, `node_modules` directory created by `npm install` command will be owned by the user who started `podman` container.
 
+If image was built locally with docker, you can quickly import it to podman without a need for rebuild:
+
+```sh
+podman pull docker-daemon:ahwayakchih/nodeapp:latest
+```
+
 ### App/module testing
 
 Simple, one-time test run can be done with:
