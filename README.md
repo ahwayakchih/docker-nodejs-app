@@ -17,7 +17,7 @@ make
 ```
 
 It will download and use latest stable Alpine Linux and build latest "current" Node.js version.
-You can use specific version of Node.js by passing it through environmental veriable. For example:
+You can use specific version of Node.js by passing it through environmental variable. For example:
 
 ```sh
 NODE_VERSION=13.5.0 make
