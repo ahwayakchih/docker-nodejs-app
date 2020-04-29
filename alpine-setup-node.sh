@@ -7,7 +7,7 @@
 NODE_VERSION=${NODE_VERSION:-"$1"}
 
 if [ "$NODE_VERSION" = "" ] ; then
-	NODE_VERSION="14.0.0"
+	NODE_VERSION="14.1.0"
 fi
 
 echo "Making sure node user and group exists ($NODE_UID:$NODE_GID)"
