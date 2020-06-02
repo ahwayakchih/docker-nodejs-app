@@ -38,7 +38,7 @@ apk add --no-cache \
     curl \
     make \
     g++ \
-    python \
+    python2 \
     git
 
 apk add --no-cache --virtual $DEPS \
